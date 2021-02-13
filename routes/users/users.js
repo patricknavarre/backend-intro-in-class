@@ -1,3 +1,6 @@
+/********************************************************************************
+ * THIS FILE IS WHERE ALL THE INPUT / OUTPUT (CRUD) OF OUR APPLICATION IS HAPPENING *
+ ********************************************************************************/
 var express = require("express");
 var router = express.Router();
 // const bcrypt = require("bcryptjs");

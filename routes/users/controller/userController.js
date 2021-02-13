@@ -1,6 +1,16 @@
+/*************************************************************
+ * `BCRYPT` IS A LIBRARY THAT WILL MAKE `HASHED` PASSWORDS *
+ *************************************************************/
 const bcrypt = require("bcryptjs");
+/*****************************************************************************************
+ * // THIS IS WHERE THE MONGOOSE SCHEMA USER TEMPLATE IS BEING PULLED FROM USING REQUIRE *
+ *****************************************************************************************/
 const User = require("../model/User");
 
+
+/************************************************************************
+ * ALL THE FUNCTIONS BUILT HERE ARE NESTED INSIDE THE MODULE.EXPORTS *
+ ************************************************************************/
 module.exports = {
   //v2 callback
   // signup: (body, callback) => {
@@ -66,18 +76,21 @@ module.exports = {
   //   });
   // },
   //v4 async and await
-  getAllUsersCallback: (req, res) => {
-    User.find({}, function (err, foundAllUsers) {
-      if (err) {
-        res.status(500).json({ message: "Failed", errorMessage: err.message });
-      } else {
-        res.status(200).json({
-          message: "success",
-          users: foundAllUsers,
-        });
-      }
-    });
-  },
+  // getAllUsersCallback: (req, res) => {
+  //   User.find({}, function (err, foundAllUsers) {
+  //     if (err) {
+  //       res.status(500).json({ message: "Failed", errorMessage: err.message });
+  //     } else {
+  //       res.status(200).json({
+  //         message: "success",
+  //         users: foundAllUsers,
+  //       });
+  //     }
+  //   });
+  // },
+/*****************************************************************
+ * MAKING A FUNCTION THAT WILL FIND ALL USERS IN THE DATABASE *
+ *****************************************************************/
   getAllUsers: async (req, res) => {
     try {
       const foundAllUsers = await User.find({});
@@ -93,14 +106,19 @@ module.exports = {
       });
     }
   },
+/****************************************************
+ * MAKING A FUNCTION THAT WILL SIGNUP NEW USERS. *
+ ****************************************************/
   signup: async (req, res) => {
     //destructuring
     const { firstName, lastName, email, password } = req.body;
-
     try {
       const salted = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salted);
-
+/**********************************************************************************
+ * CREATING A NEW USER W/ FIRSTNAME, LASTNAME, EMAIL, AND PASSWORD PROPERTIES. *
+ * USING .TRIM() TO MAKE SURE THE USER DOESN'T ADD EXTRA SPACES ON THE END *
+ **********************************************************************************/
       const createdUser = new User({
         firstName: firstName.trim(),
         lastName: lastName.trim(),
@@ -121,6 +139,9 @@ module.exports = {
       });
     }
   },
+/*********************************************
+ * FUNCTION THAT WILL DELETE A USER BY ID *
+ *********************************************/
   deleteUserByID: async (req, res) => {
     try {
       let deletedUser = await User.findByIdAndDelete({ _id: req.params.id });
@@ -136,6 +157,9 @@ module.exports = {
       });
     }
   },
+/************************************************
+ * FUNCTION THAT WILL DELETE A USER BY EMAIL *
+ ************************************************/
   deleteUserByEmail: async (req, res) => {
     try {
       let deletedUser = await User.findOneAndDelete({ email: req.body.email });
@@ -151,6 +175,9 @@ module.exports = {
       });
     }
   },
+/****************************************
+ * FUNCTION THAT WILL UPDATE A USER BY ID *
+ ****************************************/
   updateUserByID: async (req, res) => {
     try {
       let updatedUser = await User.findByIdAndUpdate(
@@ -170,6 +197,9 @@ module.exports = {
       });
     }
   },
+/**********************************************
+ * FUNCTION THAT WILL UPDATE USER BY EMAIL *
+ **********************************************/
   updateUserByEmail: async (req, res) => {
     try {
       let updatedUser = await User.findOneAndUpdate(

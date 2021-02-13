@@ -1,3 +1,4 @@
+// mongoose is an object modeling template for node.js
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
@@ -15,4 +16,5 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// export out this new "user" model using our userSchema function
 module.exports = mongoose.model("user", userSchema);

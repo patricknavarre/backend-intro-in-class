@@ -1,5 +1,11 @@
+/*******************************************************************************
+ * PULL IN THE CHECKISEMPTY FUNCTION FROM AUTHMETHODS.JS FILE USING REQUIRE *
+ *******************************************************************************/
 const { checkIsEmpty } = require("./authMethods");
 
+/**************************************************************************
+ * FUNCTION THAT IS CHECKING IF ANY OF THE USER INPUT FIELDS ARE EMPTY *
+ **************************************************************************/
 const checkSignupInputIsEmpty = (req, res, next) => {
   let errorObj = {};
 
@@ -32,6 +38,7 @@ const checkSignupInputIsEmpty = (req, res, next) => {
   }
 };
 
+// exporting out the function using module.exports
 module.exports = {
   checkSignupInputIsEmpty,
 };

@@ -1,7 +1,16 @@
+/********************************************************************************************
+ * PULLING IN THE `VALIDATOR` LIBRARY. USING THE `MATCHES` AND `ISSTRONGPASSWORD METHODS *
+ ********************************************************************************************/
 const { matches, isStrongPassword } = require("validator");
 
+/**************************************************************************************************
+ * // PULLING IN THE checkForSymbol AND checkIsEmail FUNCTIONS THAT ARE IN OUR AUTHMETHODS.JS FILE *
+ **************************************************************************************************/
 const { checkForSymbol, checkIsEmail } = require("./authMethods");
 
+/************************************************************************
+ * HELPER FUNCTION THAT WILL CHECK IF THERE IS A NUMBER IN THE INPUT *
+ ************************************************************************/
 function checkIfHaveNumber(target) {
   if (matches(target, /[0-9]/g)) {
     return true;
@@ -9,7 +18,9 @@ function checkIfHaveNumber(target) {
     return false;
   }
 }
-
+/***************************************************************************************
+ * FUNCTION THAT IS CHECKING IF THE USER IS USING THE PROPER FORMATING WHEN SIGNING UP *
+ ***************************************************************************************/
 function checkSignupDataType(req, res, next) {
   let errorObj = {};
 
@@ -61,6 +72,9 @@ function checkSignupDataType(req, res, next) {
   }
 }
 
+/**********************************************
+ * EXPORT OUT checkSignupDataType FUNCTION *
+ **********************************************/
 module.exports = {
   checkSignupDataType,
 };
