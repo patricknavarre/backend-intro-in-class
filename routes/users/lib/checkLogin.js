@@ -32,10 +32,11 @@ function checkLoginEmptyMiddleware(req, res, next) {
   }
 
   if (Object.keys(errorObj).length > 0) {
-    res.status(500).json({
-      message: "Error",
-      data: errorObj,
-    });
+    res.render("login", { error: errorObj })
+    // res.status(500).json({
+    //   message: "Error",
+    //   data: errorObj,
+    // });
   } else {
 /******************************************
  * NEXT() MEANS GO TO THE NEXT FUNCTION *

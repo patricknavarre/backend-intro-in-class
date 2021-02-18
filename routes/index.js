@@ -8,7 +8,10 @@ var router = express.Router();
  * GET / HOME PAGE. *
  *********************/
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+
+  console.log(req.session)
+   res.send("this is the default page");
+  // res.render('index', { title: 'Express' });
 });
 
 module.exports = router;

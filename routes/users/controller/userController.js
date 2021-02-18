@@ -12,82 +12,6 @@ const User = require("../model/User");
  * ALL THE FUNCTIONS BUILT HERE ARE NESTED INSIDE THE MODULE.EXPORTS *
  ************************************************************************/
 module.exports = {
-  //v2 callback
-  // signup: (body, callback) => {
-  //   bcrypt.genSalt(10, function (err, salt) {
-  //     if (err) {
-  //       return callback(err, null);
-  //     } else {
-  //       bcrypt.hash(body.password, salt, function (err, hashedPassword) {
-  //         if (err) {
-  //           return callback(err, null);
-  //         } else {
-  //           const createdUser = new User({
-  //             firstName: body.firstName,
-  //             lastName: body.lastName,
-  //             email: body.email,
-  //             password: hashedPassword,
-  //           });
-
-  //           createdUser.save(function (err, userCreatedInfo) {
-  //             if (err) {
-  //               return callback(err, null);
-  //             } else {
-  //               return callback(null, userCreatedInfo);
-  //             }
-  //           });
-  //         }
-  //       });
-  //     }
-  //   });
-  // },
-  // v3 promises
-  // signup: (body) => {
-  //   return new Promise((resolve, reject) => {
-  //     bcrypt
-  //       .genSalt(10)
-  //       .then((salt) => {
-  //         bcrypt
-  //           .hash(body.password, salt)
-  //           .then((hashedPassword) => {
-  //             const createdUser = new User({
-  //               firstName: body.firstName,
-  //               lastName: body.lastName,
-  //               email: body.email,
-  //               password: hashedPassword,
-  //             });
-
-  //             createdUser
-  //               .save()
-  //               .then((savedUser) => {
-  //                 resolve(savedUser);
-  //               })
-  //               .catch((error) => {
-  //                 reject(error);
-  //               });
-  //           })
-  //           .catch((error) => {
-  //             reject(error);
-  //           });
-  //       })
-  //       .catch((error) => {
-  //         reject(error);
-  //       });
-  //   });
-  // },
-  //v4 async and await
-  // getAllUsersCallback: (req, res) => {
-  //   User.find({}, function (err, foundAllUsers) {
-  //     if (err) {
-  //       res.status(500).json({ message: "Failed", errorMessage: err.message });
-  //     } else {
-  //       res.status(200).json({
-  //         message: "success",
-  //         users: foundAllUsers,
-  //       });
-  //     }
-  //   });
-  // },
 /*****************************************************************
  * MAKING A FUNCTION THAT WILL FIND ALL USERS IN THE DATABASE *
  *****************************************************************/
@@ -128,10 +52,11 @@ module.exports = {
 
       let savedUser = await createdUser.save();
 
-      res.status(200).json({
-        message: "success",
-        user: savedUser,
-      });
+      res.render("sign-up", { success: true});
+      // res.status(200).json({
+      //   message: "success",
+      //   user: savedUser,
+      // });
     } catch (error) {
       res.status(500).json({
         message: "error",
@@ -218,14 +143,21 @@ module.exports = {
       });
     }
   },
+/*********************
+ * // LOGIN FUNCTION *
+ *********************/
   login: async (req, res) => {
     try {
       let foundUser = await User.findOne({ email: req.body.email });
 
       if (!foundUser) {
-        res.status(404).json({
-          message: "failure",
+        res.render("login", { error: {
+         message: "Sorry, user does not exist. Plese go signup"
+        },
         });
+        // res.status(404).json({
+        //   message: "Sorry, user does not exist.  Please go signup!",
+        // });
       } else {
         let isPasswordTrue = await bcrypt.compare(
           req.body.password,
@@ -233,10 +165,17 @@ module.exports = {
         );
 
         if (isPasswordTrue) {
-          res.json({
-            message: "success",
-            successMessage: "Logged In!",
-          });
+          req.session.user = {
+            _id: foundUser._id,
+            email: foundUser.email,
+          };
+          // print out the `cookie` session info 
+          console.log(req.session);
+          res.render("home", { user: foundUser.email });
+          // res.json({
+          //   message: "success",
+          //   successMessage: "Logged In!",
+          // });
         } else {
           res.status(500).json({
             message: "failure",
