@@ -40,7 +40,7 @@
         <nav class="my-2 my-md-0 me-md-3">
           Welcome <a href="#" class="p-2 text-dark"> <%- user %> </a>
         </nav>
-        <a class="btn btn-outline-primary" href="/users/login">Logout</a>
+        <a class="btn btn-outline-primary" href="/users/logout">Logout</a>
         <% } else { %>
           <nav class="my-2 my-md-0 me-md-3">
             <a class="btn btn-outline-primary" href="/users/login">Sign in</a>
@@ -49,29 +49,46 @@
         <% } %>
       </header>
     </div>
-<!-- checking to see if user/ if not give message -->
-    <div>
-      <% if (user) { %>
-      <% } else { %>
-      <h1>You are not authorized to view this page.</h1>
-      <main class="form-signin">
-        <form method="POST" action="/users/login"> 
-          
-          <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-          
-          <label for="inputEmail" class="visually-hidden">Email address</label>
-          <input type="email" id="inputEmail" class="form-control" placeholder="Email address" name="email"required autofocus>
-          
-          <label for="inputPassword" class="visually-hidden">Password</label>
-          <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" required>
-          
-          <button class="w-100 btn btn-lg btn-primary" type="submit">Sign In</button>
-        </form>
-      </main>%>
-      <% } %>
-    </div>
+
 
     <h1>HOME PAGE</h1>
+
+
+    <div class="container">
+
+      <form method="POST" action="/users/home">
+        <div class="input-group mb-3">
+          <input type="text" name="search" class="form-control" placeholder="Search Giphy" aria-label="Search" aria-describedby="search">
+          <button class="btn btn-primary" id="search" type="submit">Search</button>
+        </div>
+      </form>
+
+      <% if (data) { %>
+        <div class="row">
+          <% data.data.forEach(function(item) { %>
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Special title treatment</h5>
+                  <div><img src="<%= item.images.original.url %>" /></div>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+              </div>
+            </div>
+            <% })%>
+        </div>
+        <% } %>
+
+    </div>
+
+
+<!-- <script>
+  function clickMe(){
+    console.log("clicked");
+  }
+
+</script> -->
+
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"
       integrity="sha384-KsvD1yqQ1/1+IA7gi3P0tyJcT3vR+NdBTt13hSJ2lnve8agRGXTTyNaBYmCR/Nwi"

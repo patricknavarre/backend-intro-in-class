@@ -8,8 +8,9 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const session = require("express-session");
 
+const session = require("express-session");
+const MongoStore = require ("connect-mongo")(session);
 const mongoose = require("mongoose");
 
 // bring this file in and use it right away
@@ -42,19 +43,30 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+/********************************************************************************************************************
+ * // MIDDLEWARE FOR THE COOKIE INFORMATION.  THE MAXAGE IS BASED OFF OF MILLISECONDS.  SO THE FOLLOWING IS FOR 1HR *
+ ********************************************************************************************************************/
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: new MongoStore({
+      url: process.env.MONGODB_URI,
+      mongooseConnection: mongoose.connection,
+      autoReconnect: true,
+    }),
     cookie: { maxAge: 60 * 60 * 1000 },
   })
 );
 
-// internal global variables
+/******************************************************
+ * // ASSIGN THE INTERNAL GLOBAL VARIABLES FOR ERRORS *
+ ******************************************************/
 app.use((req, res, next) => {
   res.locals.error = null;
   res.locals.success = null;
+  res.locals.data = null;
 
   next();
 });

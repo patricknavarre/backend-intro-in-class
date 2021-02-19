@@ -171,7 +171,9 @@ module.exports = {
           };
           // print out the `cookie` session info 
           console.log(req.session);
-          res.render("home", { user: foundUser.email });
+          // res.render("home", { user: foundUser.email });
+          // the redirect is telling do the GET(home) request
+          res.redirect("/users/home");
           // res.json({
           //   message: "success",
           //   successMessage: "Logged In!",
