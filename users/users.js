@@ -23,14 +23,20 @@ const {
   checkEmailFormat,
 } = require("./lib/checkLogin");
 /* GET users listing. */
-router.get("/create-user", async function (req, res) {
-  // res.render("sign-up", { error: null , success: null });
-  res.render("sign-up");
-  // res.send("this is the default page");
+router.get("/create-user", function (req, res) {
+  if (req.session.user) {
+    res.redirect("/users/home");
+  } else {
+    res.render("sign-up");
+  }
 });
 
 router.get("/login", function (req, res) {
-  res.render("login");
+  if (req.session.user) {
+    res.redirect("/users/home");
+  } else {
+    res.render("login");
+  }
 })
 
 router.get("/home", async function (req, res) {
@@ -55,11 +61,15 @@ router.get("/home", async function (req, res) {
   }
 });
 
+/*************************************************
+ * // THIS IS WHERE THE API IS BEING PULLED FROM  - AXIOS IS DOING THE HTTP requests(GET,POST,PUT,DELETE)*
+ *************************************************/
 router.post("/home", async function (req, res) {
   if (req.session.user) {
     try {
       let result = await axios.get(
-        `https://api.giphy.com/v1/gifs/search?api_key=${process.env.GIPHY_API_KEY}&q=${req.body.search}`
+        // `https://api.giphy.com/v1/gifs/search?api_key=${process.env.GIPHY_API_KEY}&q=${req.body.search}`
+        `https://api.openweathermap.org/data/2.5/weather?q={chicago}&appid=${process.env.GIPHY_API_KEY}&q=${req.body.search}`
       );
       console.log(result.data);
       res.render("home", { data: result.data, user: req.session.user.email });
@@ -104,10 +114,16 @@ router.put("/update-user-by-email/", updateUserByEmail);
 
 // logout
 router.get("/logout", function(req, res) {
-  console.log(req.session);
   req.session.destroy();
-  console.log(req.session);
-  return res.redirect('/users/login');
-})
+
+  res.clearCookie("connect.sid", {
+    path: "/",
+    httpOnly: true,
+    secure: false,
+    maxAge: null,
+  });
+
+  res.redirect('/users/login');
+});
 
 module.exports = router;

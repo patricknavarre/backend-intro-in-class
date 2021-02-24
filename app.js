@@ -1,19 +1,17 @@
 /****************************************************
- * // THE FILE IS THE BEGINNING OF THE ENTIRE APP** *
+ * // THE FILE IS THE BEGINNING OF THE ENTIRE APP / THE BRAIN** *
  ****************************************************/
 
 const createError = require("http-errors");
-
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-
 const session = require("express-session");
 const MongoStore = require ("connect-mongo")(session);
 const mongoose = require("mongoose");
 
-// bring this file in and use it right away
+// bring this file in and use it right away.  ALLOWS US TO USE THE ENVIRONMENT .env 
 require("dotenv").config();
 
 mongoose
@@ -29,18 +27,23 @@ mongoose
   });
 
 const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users/users");
+const usersRouter = require("./users/users");
 
+// obstantiate a server
 const app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
+// logging what type of request is being made
 app.use(logger("dev"));
+// if there's any json i want to be able to use 
 app.use(express.json());
+// be able to view encoded uRL
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+// if there's any static such as images, stylesheets...serve it up in public
 app.use(express.static(path.join(__dirname, "public")));
 
 /********************************************************************************************************************
@@ -51,6 +54,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    // without the store: the DB will not save when the user leaves site.  
     store: new MongoStore({
       url: process.env.MONGODB_URI,
       mongooseConnection: mongoose.connection,
@@ -61,7 +65,7 @@ app.use(
 );
 
 /******************************************************
- * // ASSIGN THE INTERNAL GLOBAL VARIABLES FOR ERRORS *
+ * // ASSIGN THE INTERNAL GLOBAL VARIABLES FOR EJS *
  ******************************************************/
 app.use((req, res, next) => {
   res.locals.error = null;

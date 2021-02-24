@@ -9,7 +9,7 @@ var router = express.Router();
  *********************/
 router.get('/', function(req, res, next) {
 
-  console.log(req.session)
+  // console.log(req.session)
    res.send("this is the default page");
   // res.render('index', { title: 'Express' });
 });
